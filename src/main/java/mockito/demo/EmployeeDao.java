@@ -16,4 +16,16 @@ public class EmployeeDao {
         throw new UnsupportedOperationException();
     }
 
+    public int getCount(Employee employee) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void saveEmployee(Employee employee) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void updateEmployee(Employee employee) {
+        throw new UnsupportedOperationException();
+    }
+
 }

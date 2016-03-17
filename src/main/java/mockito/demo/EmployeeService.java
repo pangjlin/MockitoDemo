@@ -52,4 +52,15 @@ public class EmployeeService {
         EmployeeUtils.persistenceEmployee(employee);
     }
 
+    //verifyµÄÊ¹ÓÃ
+    public void saveOrUpdate(Employee employee) {
+        EmployeeDao employeeDao = new EmployeeDao();
+        int count = employeeDao.getCount(employee);
+        if (count > 0) {
+            employeeDao.updateEmployee(employee);
+        } else {
+            employeeDao.saveEmployee(employee);
+        }
+    }
+
 }

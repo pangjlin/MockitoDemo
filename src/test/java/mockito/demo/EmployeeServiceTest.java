@@ -30,6 +30,7 @@ public class EmployeeServiceTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    //普通测试
     @Test
     public void testGetTotalEmployee() {
         Mockito.when(employeeDao.getTotal()).thenReturn(10);
@@ -48,6 +49,7 @@ public class EmployeeServiceTest {
         Mockito.verify(employeeDao, Mockito.times(1)).addEmployee(employee);
     }
 
+    //内部有new对象的测试
     @Test
     public void testGetTotalEmployeePower() {
         try {
@@ -78,6 +80,7 @@ public class EmployeeServiceTest {
         }
     }
 
+    //static方法的测试
     @Test
     public void testGetEmployeeCount() {
         //mock出EmployeeUtils中所有static方法
@@ -97,6 +100,41 @@ public class EmployeeServiceTest {
         EmployeeService employeeService = new EmployeeService();
         employeeService.persistenceEmployee(employee);
         PowerMockito.verifyStatic();
+    }
+
+    //verify的使用
+    @Test
+    public void testSave() {
+        try {
+            PowerMockito.whenNew(EmployeeDao.class).withNoArguments().thenReturn(employeeDao);
+            Employee employee = new Employee();
+            Mockito.when(employeeDao.getCount(employee)).thenReturn(0);
+            EmployeeService employeeService = new EmployeeService();
+            employeeService.saveOrUpdate(employee);
+            Mockito.verify(employeeDao, Mockito.times(1)).saveEmployee(employee);
+            Mockito.verify(employeeDao, Mockito.never()).updateEmployee(employee);
+            Mockito.verify(employeeDao, Mockito.times(1)).getCount(employee);
+            Mockito.verifyNoMoreInteractions(employeeDao);
+        } catch (Exception e) {
+            fail("fail");
+        }
+    }
+
+    @Test
+    public void testUpdate() {
+        try {
+            PowerMockito.whenNew(EmployeeDao.class).withNoArguments().thenReturn(employeeDao);
+            Employee employee = new Employee();
+            Mockito.when(employeeDao.getCount(employee)).thenReturn(1);
+            EmployeeService employeeService = new EmployeeService();
+            employeeService.saveOrUpdate(employee);
+            Mockito.verify(employeeDao, Mockito.times(1)).updateEmployee(employee);
+            Mockito.verify(employeeDao, Mockito.never()).saveEmployee(employee);
+            Mockito.verify(employeeDao, Mockito.times(1)).getCount(employee);
+            Mockito.verifyNoMoreInteractions(employeeDao);
+        } catch (Exception e) {
+            fail("fail");
+        }
     }
 
 }

@@ -43,4 +43,13 @@ public class EmployeeService {
         employeeDao.addEmployee(employee);
     }
 
+    //≤‚ ‘static∑Ω∑®
+    public int getEmployeeCount() {
+        return EmployeeUtils.getEmployeeCount();
+    }
+
+    public void persistenceEmployee(Employee employee) {
+        EmployeeUtils.persistenceEmployee(employee);
+    }
+
 }

@@ -19,7 +19,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(EmployeeService.class)
+@PrepareForTest({EmployeeService.class, EmployeeUtils.class})
 public class EmployeeServiceTest {
 
     @Mock
@@ -41,6 +41,7 @@ public class EmployeeServiceTest {
     @Test
     public void testCreateEmployee() {
         Employee employee = new Employee();
+        //调用addEmployee时什么都不做（doNothing）
         Mockito.doNothing().when(employeeDao).addEmployee(employee);
         EmployeeService service = new EmployeeService(employeeDao);
         service.createEmployee(employee);
@@ -75,6 +76,27 @@ public class EmployeeServiceTest {
         } catch (Exception e) {
             fail("fail");
         }
+    }
+
+    @Test
+    public void testGetEmployeeCount() {
+        //mock出EmployeeUtils中所有static方法
+        PowerMockito.mockStatic(EmployeeUtils.class);
+        Mockito.when(EmployeeUtils.getEmployeeCount()).thenReturn(5);
+        EmployeeService employeeService = new EmployeeService();
+        int count = employeeService.getEmployeeCount();
+        assertEquals(5, count);
+    }
+
+    @Test
+    public void testPersistenceEmployee() {
+        PowerMockito.mockStatic(EmployeeUtils.class);
+        Employee employee = new Employee();
+        //EmployeeUtils中所有void方法都doNothing
+        PowerMockito.doNothing().when(EmployeeUtils.class);
+        EmployeeService employeeService = new EmployeeService();
+        employeeService.persistenceEmployee(employee);
+        PowerMockito.verifyStatic();
     }
 
 }

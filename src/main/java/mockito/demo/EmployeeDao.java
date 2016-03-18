@@ -8,6 +8,18 @@ package mockito.demo;
 
 public class EmployeeDao {
 
+    public EmployeeDao() {
+
+    }
+
+    public enum Kind {
+        MYSQL, ORACLE
+    }
+
+    public EmployeeDao(boolean lazy, Kind kind) {
+        throw new UnsupportedOperationException();
+    }
+
     public int getTotal() {
         throw new UnsupportedOperationException();
     }
@@ -25,6 +37,14 @@ public class EmployeeDao {
     }
 
     public void updateEmployee(Employee employee) {
+        throw new UnsupportedOperationException();
+    }
+
+    public final boolean insertEmployee(Employee employee) {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean insertEmployeeDB(Employee employee) {
         throw new UnsupportedOperationException();
     }
 

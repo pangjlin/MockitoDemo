@@ -6,7 +6,9 @@
  */
 package mockito.demo;
 
+import static mockito.demo.EmployeeDao.Kind.MYSQL;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +21,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({EmployeeService.class, EmployeeUtils.class})
+@PrepareForTest({EmployeeService.class, EmployeeUtils.class, EmployeeDao.class})
 public class EmployeeServiceTest {
 
     @Mock
@@ -53,6 +55,7 @@ public class EmployeeServiceTest {
     @Test
     public void testGetTotalEmployeePower() {
         try {
+            //EmployeeDao employeeDao = PowerMockito.mock(EmployeeDao.class);
             //设置预期值
             PowerMockito.when(employeeDao.getTotal()).thenReturn(10);
             EmployeeService employeeService = new EmployeeService();
@@ -68,6 +71,7 @@ public class EmployeeServiceTest {
     @Test
     public void testCreateEmployeePower() {
         try {
+            //EmployeeDao employeeDao = PowerMockito.mock(EmployeeDao.class);
             Employee employee = new Employee();
             EmployeeService service = new EmployeeService();
             //模拟出来调用的方法中new的对象
@@ -106,6 +110,7 @@ public class EmployeeServiceTest {
     @Test
     public void testSave() {
         try {
+            //EmployeeDao employeeDao = PowerMockito.mock(EmployeeDao.class);
             PowerMockito.whenNew(EmployeeDao.class).withNoArguments().thenReturn(employeeDao);
             Employee employee = new Employee();
             Mockito.when(employeeDao.getCount(employee)).thenReturn(0);
@@ -123,6 +128,7 @@ public class EmployeeServiceTest {
     @Test
     public void testUpdate() {
         try {
+            //EmployeeDao employeeDao = PowerMockito.mock(EmployeeDao.class);
             PowerMockito.whenNew(EmployeeDao.class).withNoArguments().thenReturn(employeeDao);
             Employee employee = new Employee();
             Mockito.when(employeeDao.getCount(employee)).thenReturn(1);
@@ -137,4 +143,41 @@ public class EmployeeServiceTest {
         }
     }
 
+    //powermock测试final方法
+    @Test
+    public void testInsertEmployee() {
+        EmployeeDao employeeDao = PowerMockito.mock(EmployeeDao.class);
+        Employee employee = new Employee();
+        EmployeeService service = new EmployeeService(employeeDao);
+        service.insertEmployee(employee);
+        Mockito.verify(employeeDao, Mockito.times(1)).insertEmployee(employee);
+    }
+
+    //测试构造函数
+    @Test
+    public void testCreateEmployeeDB() {
+        try {
+            PowerMockito.whenNew(EmployeeDao.class).withArguments(false, MYSQL).thenReturn(employeeDao);
+            Employee employee = new Employee();
+            EmployeeService service = new EmployeeService();
+            service.createEmployeeDB(employee);
+            Mockito.verify(employeeDao, Mockito.times(1)).insertEmployeeDB(employee);
+        } catch (Exception e) {
+            fail("fail");
+        }
+    }
+
+    //测试private方法
+    @Test
+    public void testExist() {
+        try {
+            EmployeeService service = PowerMockito.mock(EmployeeService.class);
+            PowerMockito.when(service.exist()).thenCallRealMethod();
+            PowerMockito.when(service, "check").thenReturn(true);
+            assertTrue(service.exist());
+            Mockito.verify(service, Mockito.times(3)).exist();
+        } catch (Exception e) {
+            fail("fail");
+        }
+    }
 }

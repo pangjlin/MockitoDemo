@@ -6,6 +6,7 @@
  */
 package mockito.demo;
 
+import mockito.demo.EmployeeDao.Kind;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class EmployeeService {
@@ -61,6 +62,26 @@ public class EmployeeService {
         } else {
             employeeDao.saveEmployee(employee);
         }
+    }
+
+    //powermock测试final
+    public void insertEmployee(Employee employee) {
+        employeeDao.insertEmployee(employee);
+    }
+
+    //测试有参数的构造函数
+    public void createEmployeeDB(final Employee employee) {
+        EmployeeDao employeeDao = new EmployeeDao(false, Kind.MYSQL);
+        employeeDao.insertEmployeeDB(employee);
+    }
+
+    //测试private方法
+    public boolean exist() {
+        return check();
+    }
+
+    private boolean check() {
+        return false;
     }
 
 }

@@ -175,7 +175,6 @@ public class EmployeeServiceTest {
             PowerMockito.when(service.exist()).thenCallRealMethod();
             PowerMockito.when(service, "check").thenReturn(true);
             assertTrue(service.exist());
-            Mockito.verify(service, Mockito.times(3)).exist();
         } catch (Exception e) {
             fail("fail");
         }

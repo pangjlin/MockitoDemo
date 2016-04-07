@@ -6,12 +6,12 @@
  */
 package mockito.demo;
 
+import javax.annotation.Resource;
 import mockito.demo.EmployeeDao.Kind;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class EmployeeService {
 
-    @Autowired
+    @Resource
     private EmployeeDao employeeDao;
 
     //无参构造方法
